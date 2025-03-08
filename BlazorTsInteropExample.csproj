@@ -17,16 +17,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Build\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
   <Target Name="CompileTypeScript"></Target>
 
   <PropertyGroup>
+    <BuildScriptsDir>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))Build</BuildScriptsDir>
     <ScriptsDir>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))Scripts/blazortsinteropexample</ScriptsDir>
     <NpmBuildOutDir>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))wwwroot/js/dist</NpmBuildOutDir>
   </PropertyGroup>
   <Target Name="RunNpmBuild" BeforeTargets="Build">
-    <Exec Command="pwsh -Command ^&#xD;&#xA;      &quot;$npmBuildOutDirExists = Test-Path -Path '$(NpmBuildOutDir)';&quot; ^&#xD;&#xA;      &quot;$npmBuildOutDirIsEmpty = if ($npmBuildOutDirExists) { (Get-ChildItem -Path '$(NpmBuildOutDir)' -Recurse).Count -eq 0 } else { $true };&quot; ^&#xD;&#xA;      &quot;if ($npmBuildOutDirIsEmpty) {&quot; ^&#xD;&#xA;      &quot;  Write-Host 'NpmBuildOutDir is empty. Running npm install...';&quot; ^&#xD;&#xA;      &quot;  cd '$(ScriptsDir)';&quot; ^&#xD;&#xA;      &quot;  npm install;&quot; ^&#xD;&#xA;      &quot;  npm run build;&quot; ^&#xD;&#xA;      &quot;} else {&quot; ^&#xD;&#xA;      &quot;  $dateA = (Get-ChildItem -LiteralPath '$(ScriptsDir)' -File -Recurse | Where-Object { $_.FullName -notlike '*\node_modules\*' -and $_.Name -ne 'typings.ts' } | Sort-Object LastWriteTime -Descending | Select-Object -First 1).LastWriteTime;&quot; ^&#xD;&#xA;      &quot;  $dateB = (Get-ChildItem -LiteralPath '$(NpmBuildOutDir)' -File -Recurse | Sort-Object LastWriteTime -Descending | Select-Object -First 1).LastWriteTime;&quot; ^&#xD;&#xA;      &quot;  if ($dateA -gt $dateB) {&quot; ^&#xD;&#xA;      &quot;    Write-Host 'Scripts are newer than dist. Building scripts...' ;&quot; ^&#xD;&#xA;      &quot;    Write-Host $dateA;&quot; ^&#xD;&#xA;      &quot;    Write-Host $dateB;&quot; ^&#xD;&#xA;      &quot;    cd '$(ScriptsDir)';&quot; ^&#xD;&#xA;      &quot;    npm run build;&quot; ^&#xD;&#xA;      &quot;  }&quot; ^&#xD;&#xA;      &quot;}&quot;" />
+    <Exec Command="pwsh -File $(BuildScriptsDir)/build_scripts.ps1 $(ScriptsDir) $(NpmBuildOutDir)" />
   </Target>
 
 </Project>

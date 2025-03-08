@@ -17,6 +17,7 @@ jobs:
 
       - name: Dotnet Publish
         run: dotnet publish
+        shell: pwsh
 
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
