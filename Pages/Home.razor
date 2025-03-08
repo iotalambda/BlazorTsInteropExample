@@ -1,0 +1,37 @@
+﻿@page "/"
+@implements IPointerEventsAdapterHandler
+@inject BrowserConsoleAdapter BrowserConsole
+@inject PointerEventsAdapter PointerEvents
+
+<h1>C# → TypeScript</h1>
+<button onclick=@(() => BrowserConsole.LogAsync("Greetings! (C# → TypeScript)"))>
+    Log greetings to browser console
+</button>
+
+<h1>TypeScript → C#</h1>
+<ol>
+    @foreach (var (x, y) in clickPositions)
+    {
+        <li>Clicked at @x, @y.</li>
+    }
+</ol>
+
+@code {
+
+    DotNetObjectReference<Home>? selfReference;
+    List<(int X, int Y)> clickPositions = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        selfReference = DotNetObjectReference.Create(this);
+        await PointerEvents.AddForHandlerAsync(selfReference, default);
+    }
+
+    [JSInvokable]
+    public Task HandleClickAtAsync(int x, int y)
+    {
+        clickPositions.Add((x, y));
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+}

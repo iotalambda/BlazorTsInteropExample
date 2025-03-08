@@ -1,0 +1,1 @@
+﻿global using BlazorTsInteropExample.Scripts.Adapters;
