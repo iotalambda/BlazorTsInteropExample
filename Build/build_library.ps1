@@ -16,6 +16,7 @@ if ($npmBuildOutDirIsEmpty) {
     Write-Host 'NpmBuildOutDir is empty. Running npm install...'
     cd $librarySourceDir
     npm install
+    Write-Host 'Building the library...'
     npm run build
 } else {
     $dateA = (Get-ChildItem -LiteralPath $librarySourceDir -File -Recurse | 
@@ -30,7 +31,7 @@ if ($npmBuildOutDirIsEmpty) {
     ).LastWriteTime
 
     if ($dateA -gt $dateB) {
-        Write-Host 'Library source files are newer than dist. Building library...'
+        Write-Host 'Library source files are newer than dist. Building the library...'
         Write-Host $dateA
         Write-Host $dateB
         cd $librarySourceDir
