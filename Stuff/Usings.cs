@@ -1,1 +1,1 @@
-﻿global using BlazorTsInteropExample.Scripts.Adapters;
+﻿global using BlazorTsInteropExample.Adapters.CSharp;

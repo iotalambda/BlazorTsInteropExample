@@ -1,37 +1,39 @@
 param(
-    [string]$ScriptsDir,
-    [string]$NpmBuildOutDir
+    [string]$projectDirWithTrailing
 )
 
-$npmBuildOutDirExists = Test-Path -Path $NpmBuildOutDir
+$librarySourceDir = $projectDirWithTrailing + 'Adapters/blazortsinteropexample'
+$npmBuildOutDir = $projectDirWithTrailing + 'wwwroot/js'
+
+$npmBuildOutDirExists = Test-Path -Path $npmBuildOutDir
 $npmBuildOutDirIsEmpty = if ($npmBuildOutDirExists) { 
-    (Get-ChildItem -Path $NpmBuildOutDir -Recurse).Count -eq 0 
+    (Get-ChildItem -Path $npmBuildOutDir -Recurse).Count -eq 0 
 } else { 
     $true 
 }
 
 if ($npmBuildOutDirIsEmpty) {
     Write-Host 'NpmBuildOutDir is empty. Running npm install...'
-    cd $ScriptsDir
+    cd $librarySourceDir
     npm install
     npm run build
 } else {
-    $dateA = (Get-ChildItem -LiteralPath $ScriptsDir -File -Recurse | 
+    $dateA = (Get-ChildItem -LiteralPath $librarySourceDir -File -Recurse | 
         Where-Object { $_.FullName -notlike '*\node_modules\*' -and $_.Name -ne 'typings.ts' } | 
         Sort-Object LastWriteTime -Descending | 
         Select-Object -First 1
     ).LastWriteTime
 
-    $dateB = (Get-ChildItem -LiteralPath $NpmBuildOutDir -File -Recurse | 
+    $dateB = (Get-ChildItem -LiteralPath $npmBuildOutDir -File -Recurse | 
         Sort-Object LastWriteTime -Descending | 
         Select-Object -First 1
     ).LastWriteTime
 
     if ($dateA -gt $dateB) {
-        Write-Host 'Scripts are newer than dist. Building scripts...'
+        Write-Host 'Library source files are newer than dist. Building library...'
         Write-Host $dateA
         Write-Host $dateB
-        cd $ScriptsDir
+        cd $librarySourceDir
         npm run build
     }
 }

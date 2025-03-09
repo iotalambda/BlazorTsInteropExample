@@ -1,4 +1,5 @@
 using BlazorTsInteropExample;
+using BlazorTsInteropExample.Adapters.CSharp;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 

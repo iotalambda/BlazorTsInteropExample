@@ -17,7 +17,7 @@
 			It is not used if RtDivideTypesAmongFiles='true' specified.
 			Important! Do not forget to include generated file to solution.
 		-->
-        <RtTargetFile>$(ProjectDir)Scripts\blazortsinteropexample\src\typings.ts</RtTargetFile>
+        <RtTargetFile>$(ProjectDir)Adapters\blazortsinteropexample\src\typings.ts</RtTargetFile>
 
 				<RtConfigurationMethod>BlazorTsInteropExample.Stuff.ReinforcedTypings.ReinforcedTypingsConfiguration.Configure</RtConfigurationMethod>
 

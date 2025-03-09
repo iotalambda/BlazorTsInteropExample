@@ -1,6 +1,6 @@
 ﻿using Reinforced.Typings.Attributes;
 
-namespace BlazorTsInteropExample.Scripts.Adapters;
+namespace BlazorTsInteropExample.Adapters.CSharp;
 
 [TsInterface]
 public interface IPointerEventsAdapterHandler

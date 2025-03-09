@@ -17,18 +17,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Build\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
   <Target Name="CompileTypeScript"></Target>
 
   <PropertyGroup>
-    <BuildScriptsDir>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))Build</BuildScriptsDir>
-    <ScriptsDir>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))Scripts/blazortsinteropexample</ScriptsDir>
-    <NpmBuildOutDir>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))wwwroot/js/dist</NpmBuildOutDir>
+    <ProjectDirWithTrailing>$([MSBuild]::EnsureTrailingSlash($(MSBuildProjectDirectory)))</ProjectDirWithTrailing>
   </PropertyGroup>
   <Target Name="RunNpmBuild" BeforeTargets="Build">
-    <Exec Command="pwsh -File $(BuildScriptsDir)/build_scripts.ps1 $(ScriptsDir) $(NpmBuildOutDir)" />
+    <Exec Command="pwsh -File $(ProjectDirWithTrailing)Build/build_library.ps1 $(ProjectDirWithTrailing)" />
   </Target>
 
 </Project>

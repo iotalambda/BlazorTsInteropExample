@@ -1,23 +1,24 @@
 ﻿using Microsoft.JSInterop;
 using Reinforced.Typings.Attributes;
 
-namespace BlazorTsInteropExample.Scripts.Adapters;
+namespace BlazorTsInteropExample.Adapters.CSharp;
 
 [TsInterface]
-public class BrowserConsoleAdapter(IJSRuntime js) : IAsyncDisposable
+public class PointerEventsAdapter(IJSRuntime js) : IAsyncDisposable
 {
     IJSObjectReference? module;
 
-    public async Task LogAsync(string message, [TsIgnore] CancellationToken cancellationToken = default)
+    public async Task AddForHandlerAsync<THandler>(DotNetObjectReference<THandler> handlerReference, [TsIgnore] CancellationToken cancellationToken)
+        where THandler : class, IPointerEventsAdapterHandler
     {
         module ??= await ImportModule(cancellationToken);
-        await module.InvokeVoidAsync("default.logAsync", cancellationToken, [message]);
+        await module.InvokeVoidAsync("default.addForHandlerAsync", cancellationToken, [handlerReference]);
     }
 
     [TsIgnore]
     async Task<IJSObjectReference> ImportModule(CancellationToken cancellationToken)
     {
-        return await js.InvokeAsync<IJSObjectReference>("import", cancellationToken, "./js/dist/browserConsoleAdapter.js");
+        return await js.InvokeAsync<IJSObjectReference>("import", cancellationToken, "./js/dist/pointerEventsAdapter.js");
     }
 
     [TsIgnore]
